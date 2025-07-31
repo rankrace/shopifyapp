@@ -47,7 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       shop,
       usage: { allowed: true, current: 0, limit: 10 },
       items: [],
-      error: "Failed to load data. Please reinstall the app.",
+      error: "Shop not found. Please reinstall the app.",
     });
   }
 }
@@ -71,42 +71,48 @@ export async function action({ request }: ActionFunctionArgs) {
 
     // Fetch items from Shopify based on type
     let items = [];
-    const client = new shopify.rest.Admin({
-      session: {
-        accessToken: session.accessToken,
-        shop: shop,
-      },
-    });
+    
+    try {
+      const client = new shopify.rest.Admin({
+        session: {
+          accessToken: session.accessToken,
+          shop: shop,
+        },
+      });
 
-    switch (itemType) {
-      case "product":
-        const productsResponse = await client.get({
-          path: "products",
-          query: { limit: 50 },
-        });
-        items = productsResponse.body.products || [];
-        break;
-      case "collection":
-        const collectionsResponse = await client.get({
-          path: "collections",
-          query: { limit: 50 },
-        });
-        items = collectionsResponse.body.collections || [];
-        break;
-      case "page":
-        const pagesResponse = await client.get({
-          path: "pages",
-          query: { limit: 50 },
-        });
-        items = pagesResponse.body.pages || [];
-        break;
-      case "blog":
-        const blogsResponse = await client.get({
-          path: "blogs",
-          query: { limit: 50 },
-        });
-        items = blogsResponse.body.blogs || [];
-        break;
+      switch (itemType) {
+        case "product":
+          const productsResponse = await client.get({
+            path: "products",
+            query: { limit: 50 },
+          });
+          items = productsResponse.body.products || [];
+          break;
+        case "collection":
+          const collectionsResponse = await client.get({
+            path: "collections",
+            query: { limit: 50 },
+          });
+          items = collectionsResponse.body.collections || [];
+          break;
+        case "page":
+          const pagesResponse = await client.get({
+            path: "pages",
+            query: { limit: 50 },
+          });
+          items = pagesResponse.body.pages || [];
+          break;
+        case "blog":
+          const blogsResponse = await client.get({
+            path: "blogs",
+            query: { limit: 50 },
+          });
+          items = blogsResponse.body.blogs || [];
+          break;
+      }
+    } catch (apiError) {
+      console.error("Shopify API error:", apiError);
+      return json({ error: "Failed to fetch items from Shopify" }, { status: 500 });
     }
 
     return json({ items, itemType });
@@ -134,9 +140,11 @@ export default function Analyze() {
                 image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
               >
                 <p>This app needs to be installed from your Shopify admin to work properly.</p>
-                <Button primary url="/auth">
-                  Install App
-                </Button>
+                <div style={{ marginTop: "20px" }}>
+                  <Button primary url="/auth">
+                    Install App
+                  </Button>
+                </div>
               </EmptyState>
             </Card>
           </Layout.Section>
@@ -151,7 +159,7 @@ export default function Analyze() {
       subtitle="Select items to analyze for SEO optimization"
       backAction={{
         content: "Dashboard",
-        onAction: () => navigate("/"),
+        onAction: () => navigate(`/?shop=${shop}`),
       }}
     >
       <Layout>

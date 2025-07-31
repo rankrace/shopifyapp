@@ -53,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       shop,
       usage: { allowed: true, current: 0, limit: 10 },
       seoAnalyses: [],
-      error: "Failed to load data. Please reinstall the app.",
+      error: "Shop not found. Please reinstall the app.",
     });
   }
 }
@@ -125,13 +125,13 @@ export default function Index() {
     </Badge>,
     item.itemType.charAt(0).toUpperCase() + item.itemType.slice(1),
     <div style={{ display: 'flex', gap: '8px' }}>
-      <Button size="micro" onClick={() => navigate(`/analyze/${item.id}`)}>
+      <Button size="micro" onClick={() => navigate(`/analyze/${item.id}?shop=${shop}`)}>
         View
       </Button>
-      <Button size="micro" onClick={() => navigate(`/suggest/${item.id}`)}>
+      <Button size="micro" onClick={() => navigate(`/suggest/${item.id}?shop=${shop}`)}>
         Suggest
       </Button>
-      <Button size="micro" onClick={() => navigate(`/apply/${item.id}`)}>
+      <Button size="micro" onClick={() => navigate(`/apply/${item.id}?shop=${shop}`)}>
         Apply AI Fix
       </Button>
     </div>,
@@ -147,7 +147,7 @@ export default function Index() {
       subtitle={shop ? `Analyzing ${shop}` : "Welcome to SEO AI Optimizer"}
       primaryAction={{
         content: "Analyze New Items",
-        onAction: () => navigate("/analyze"),
+        onAction: () => navigate(`/analyze?shop=${shop}`),
       }}
     >
       <Layout>
@@ -229,7 +229,7 @@ export default function Index() {
                 <Text variant="bodyMd" as="p">
                   No items analyzed yet. Start by analyzing your products, collections, or pages.
                 </Text>
-                <Button onClick={() => navigate("/analyze")}>
+                <Button onClick={() => navigate(`/analyze?shop=${shop}`)}>
                   Start Analysis
                 </Button>
               </div>
