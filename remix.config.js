@@ -7,5 +7,6 @@ module.exports = {
     /^@shopify\/polaris.*/,
     /^@shopify\/app-bridge.*/,
     /^@shopify\/app-bridge-react.*/,
+    /^@shopify\/shopify-api.*/,
   ],
 }; 

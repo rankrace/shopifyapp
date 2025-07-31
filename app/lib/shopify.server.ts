@@ -3,15 +3,34 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Initialize Shopify API
-export const shopify = shopifyApi({
-  apiKey: process.env.SHOPIFY_API_KEY!,
-  apiSecretKey: process.env.SHOPIFY_API_SECRET!,
-  scopes: process.env.SHOPIFY_SCOPES?.split(',') || [],
-  hostName: process.env.SHOPIFY_APP_URL?.replace(/https:\/\//, '') || '',
-  apiVersion: LATEST_API_VERSION,
-  isEmbeddedApp: true,
-});
+// Lazy initialization of Shopify API to avoid runtime errors
+let shopifyInstance: any = null;
+
+function getShopify() {
+  if (!shopifyInstance) {
+    shopifyInstance = shopifyApi({
+      apiKey: process.env.SHOPIFY_API_KEY!,
+      apiSecretKey: process.env.SHOPIFY_API_SECRET!,
+      scopes: process.env.SHOPIFY_SCOPES?.split(',') || [],
+      hostName: process.env.SHOPIFY_APP_URL?.replace(/https:\/\//, '') || '',
+      apiVersion: LATEST_API_VERSION,
+      isEmbeddedApp: true,
+    });
+  }
+  return shopifyInstance;
+}
+
+export const shopify = {
+  get auth() {
+    return getShopify().auth;
+  },
+  get rest() {
+    return getShopify().rest;
+  },
+  get webhooks() {
+    return getShopify().webhooks;
+  },
+};
 
 // Get shop session
 export async function getShopSession(shop: string) {
