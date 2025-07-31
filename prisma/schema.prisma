@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Shop {
+  id                String   @id @default(cuid())
+  shopifyDomain     String   @unique
+  accessToken       String
+  scope             String
+  email             String?
+  name              String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Usage tracking
+  usageCount        Int      @default(0)
+  usageLimit        Int      @default(10) // Free plan default
+  planType          String   @default("free") // free, basic, pro, enterprise
+  
+  // SEO Analysis records
+  seoAnalyses       SeoAnalysis[]
+  
+  @@map("shops")
+}
+
+model SeoAnalysis {
+  id                String   @id @default(cuid())
+  shopId            String
+  shop              Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  // Item being analyzed
+  itemType          String   // product, collection, page, blog
+  itemId            String
+  itemTitle         String
+  itemUrl           String?
+  
+  // SEO Analysis results
+  seoScore          Int      // 0-100
+  metaTitle         String?
+  metaDescription   String?
+  hasH1             Boolean  @default(false)
+  hasH2             Boolean  @default(false)
+  imageCount        Int      @default(0)
+  imagesWithAlt     Int      @default(0)
+  wordCount         Int      @default(0)
+  keywordDensity    Float    @default(0)
+  
+  // AI Suggestions
+  suggestedTitle    String?
+  suggestedDescription String?
+  suggestedContent  String?
+  
+  // Status
+  status            String   @default("needs_work") // needs_work, optimized
+  lastAnalyzed      DateTime @default(now())
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@unique([shopId, itemType, itemId])
+  @@map("seo_analyses")
+}
+
+model UsageLog {
+  id                String   @id @default(cuid())
+  shopId            String
+  shop              Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  
+  action            String   // analyze, optimize, generate
+  itemType          String?
+  itemId            String?
+  
+  createdAt         DateTime @default(now())
+  
+  @@map("usage_logs")
+} 
