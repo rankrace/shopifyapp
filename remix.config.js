@@ -8,5 +8,6 @@ module.exports = {
     /^@shopify\/app-bridge.*/,
     /^@shopify\/app-bridge-react.*/,
     /^@shopify\/shopify-api.*/,
+    /^isbot.*/,
   ],
 }; 
