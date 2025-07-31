@@ -1,5 +1,4 @@
 import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
-import { restResources } from '@shopify/shopify-api/rest/admin/2024-01';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -12,7 +11,6 @@ export const shopify = shopifyApi({
   hostName: process.env.SHOPIFY_APP_URL?.replace(/https:\/\//, '') || '',
   apiVersion: LATEST_API_VERSION,
   isEmbeddedApp: true,
-  restResources,
 });
 
 // Get shop session
@@ -82,4 +80,4 @@ export async function incrementUsage(shopId: string, action: string, itemType?: 
       },
     }),
   ]);
-} 
+}
