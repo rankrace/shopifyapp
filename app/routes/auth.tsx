@@ -14,6 +14,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
+    console.log("Starting OAuth for shop:", shop);
+    console.log("Shopify API Key:", process.env.SHOPIFY_API_KEY ? "Set" : "Missing");
+    console.log("Shopify API Secret:", process.env.SHOPIFY_API_SECRET ? "Set" : "Missing");
+    console.log("Shopify App URL:", process.env.SHOPIFY_APP_URL);
+    
     // Begin OAuth process
     const authRoute = await shopify.auth.begin({
       shop,
@@ -21,10 +26,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
       isOnline: false,
     });
 
+    console.log("Auth route generated:", authRoute.url);
     return redirect(authRoute.url);
   } catch (error) {
-    console.error("Auth error:", error);
-    return redirect("/auth?error=Failed to start authentication");
+    console.error("Auth error details:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
+    
+    // Return more specific error information
+    const errorMessage = error.message || "Unknown authentication error";
+    return redirect(`/auth?error=${encodeURIComponent(errorMessage)}`);
   }
 }
 
@@ -57,8 +68,16 @@ export default function Auth() {
               
               {error && (
                 <div style={{ marginBottom: "20px" }}>
-                  <Banner tone="critical" title="Error">
-                    {error}
+                  <Banner tone="critical" title="Authentication Error">
+                    <p><strong>Error:</strong> {error}</p>
+                    <p style={{ marginTop: "8px" }}>
+                      Please check:
+                    </p>
+                    <ul style={{ marginTop: "4px", paddingLeft: "20px" }}>
+                      <li>Your Shopify Partner Dashboard app configuration</li>
+                      <li>Environment variables in Vercel dashboard</li>
+                      <li>App URL and redirection URLs are correct</li>
+                    </ul>
                   </Banner>
                 </div>
               )}
