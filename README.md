@@ -1,232 +1,252 @@
-<<<<<<< HEAD
-# SEO AI Optimizer - Shopify App
+# AI-powered SEO Score and Optimizer for Shopify
 
-An AI-powered SEO analysis and optimization app for Shopify merchants. This app helps store owners improve their search engine rankings by analyzing products, collections, pages, and blog posts, then providing AI-generated suggestions for optimization.
+A complete Shopify app that provides AI-powered SEO analysis and optimization for products, collections, and pages.
 
-## Features
+## 🚀 Features
 
-### Core Functionality
 - **OAuth Authentication** with Shopify
-- **SEO Analysis** of products, collections, pages, and blog posts
+- **SEO Analysis** with scoring (0-100%)
 - **AI-Powered Suggestions** using OpenAI GPT-4
-- **One-Click Optimization** with Shopify Admin API integration
-- **Usage Tracking** with tiered subscription plans
-- **Mobile-Responsive** Polaris-based UI
+- **One-click Optimization** via Shopify Admin API
+- **Usage Tracking** with tiered pricing plans
+- **Mobile-responsive** Polaris UI
+- **Real-time Webhooks** for data updates
 
-### SEO Analysis Includes
-- Meta title presence and length optimization
-- Meta description presence and length optimization
-- H1/H2 heading structure analysis
-- Image alt text optimization
-- Keyword density analysis
-- Word count assessment
-- Overall SEO score (0-100%)
+## 🛠 Tech Stack
 
-### Subscription Plans
-- **Free**: 10 analyses per month
-- **Basic ($19/month)**: 50 analyses per month
-- **Pro ($29/month)**: 100 analyses per month
-- **Enterprise ($59/month)**: 250 analyses per month
-
-## Tech Stack
-
-- **Frontend**: React 18, Remix 2.5, Shopify Polaris 12
+- **Frontend**: React 18.3.1, Remix 2.17.0, Shopify Polaris 12.27.0
 - **Backend**: Node.js, Remix loaders/actions
-- **Database**: Prisma ORM with PostgreSQL
-- **Authentication**: Shopify OAuth (Public App)
-- **AI**: OpenAI GPT-4 API
-- **Deployment**: Render/Railway ready
+- **Database**: PostgreSQL with Prisma ORM 5.22.0
+- **Authentication**: Shopify OAuth
+- **AI**: OpenAI API 4.104.0
+- **Deployment**: Vercel
+- **Shopify APIs**: App Bridge 3.7.10, Shopify API 10.0.0
 
-## Prerequisites
+## 📋 Prerequisites
 
 - Node.js 18+ 
-- PostgreSQL database
+- PostgreSQL database (Supabase recommended)
 - Shopify Partner account
 - OpenAI API key
+- Vercel account
 
-## Local Development Setup
+## 🚀 Quick Start
 
-### 1. Clone and Install Dependencies
+### 1. Clone and Install
 
 ```bash
-git clone <repository-url>
-cd seo-ai-optimizer
+git clone <your-repo>
+cd SEOAI
 npm install
 ```
 
-### 2. Environment Configuration
+### 2. Environment Setup
 
-Copy the environment example file and configure your variables:
-
-```bash
-cp env.example .env
-```
-
-Fill in the required environment variables:
+Copy `.env.example` to `.env` and fill in:
 
 ```env
-# Shopify App Configuration
-SHOPIFY_API_KEY=your_shopify_api_key
-SHOPIFY_API_SECRET=your_shopify_api_secret
-SHOPIFY_SCOPES=read_products,write_products,read_collections,write_collections,read_pages,write_pages,read_blog_posts,write_blog_posts
-SHOPIFY_APP_URL=https://your-app-domain.com
+# Shopify App
+SHOPIFY_API_KEY=your_api_key
+SHOPIFY_API_SECRET=your_api_secret
+SHOPIFY_SCOPES=read_products,write_products,read_collections,write_collections,read_pages,write_pages
+SHOPIFY_APP_URL=https://your-domain.vercel.app
 SHOPIFY_APP_NAME="SEO AI Optimizer"
 
 # Database
-DATABASE_URL="postgresql://username:password@localhost:5432/seo_ai_db"
+DATABASE_URL=your_supabase_postgres_url
 
-# OpenAI Configuration
+# OpenAI
 OPENAI_API_KEY=your_openai_api_key
 
-# App Configuration
-NODE_ENV=development
-SESSION_SECRET=your_session_secret_key
+# App
+NODE_ENV=production
+SESSION_SECRET=your_session_secret
+
+# Billing Plans (JSON)
+SHOPIFY_BILLING_PLANS={"basic":{"name":"Basic","price":19,"usage_limit":50},"pro":{"name":"Pro","price":29,"usage_limit":100},"enterprise":{"name":"Enterprise","price":59,"usage_limit":250}}
 ```
 
 ### 3. Database Setup
 
 ```bash
 # Generate Prisma client
-npm run db:generate
+npx prisma generate
 
 # Push schema to database
-npm run db:push
-
-# (Optional) Run migrations
-npm run db:migrate
+npx prisma db push
 ```
 
-### 4. Start Development Server
+### 4. Development
 
 ```bash
 npm run dev
 ```
 
-The app will be available at `http://localhost:3000`
+### 5. Deploy to Vercel
 
-## Shopify App Setup
+1. Connect your GitHub repo to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main
 
-### 1. Create Shopify App
+## 🔧 Configuration
 
-1. Go to your [Shopify Partner Dashboard](https://partners.shopify.com)
-2. Create a new app
-3. Set app type to "Public app"
-4. Configure the following URLs:
-   - **App URL**: `https://your-domain.com`
-   - **Allowed redirection URLs**: `https://your-domain.com/auth/callback`
+### Version Management
 
-### 2. Configure App Scopes
+This project uses **exact versions** and **overrides** to prevent conflicts:
 
-Ensure your app has the following scopes:
-- `read_products`, `write_products`
-- `read_collections`, `write_collections`
-- `read_pages`, `write_pages`
-- `read_blog_posts`, `write_blog_posts`
-
-### 3. Set Up Webhooks (Optional)
-
-For real-time updates, configure webhooks for:
-- `products/update`
-- `collections/update`
-- `pages/update`
-- `articles/update`
-
-## Deployment
-
-### Render Deployment
-
-1. **Create a new Web Service** on Render
-2. **Connect your GitHub repository**
-3. **Configure environment variables** from your `.env` file
-4. **Set build command**: `npm install && npm run build`
-5. **Set start command**: `npm start`
-6. **Add PostgreSQL database** and update `DATABASE_URL`
-
-### Railway Deployment
-
-1. **Connect your GitHub repository** to Railway
-2. **Add PostgreSQL plugin**
-3. **Configure environment variables**
-4. **Deploy automatically**
-
-### Environment Variables for Production
-
-```env
-NODE_ENV=production
-DATABASE_URL=your_production_database_url
-SHOPIFY_API_KEY=your_shopify_api_key
-SHOPIFY_API_SECRET=your_shopify_api_secret
-OPENAI_API_KEY=your_openai_api_key
-SESSION_SECRET=your_secure_session_secret
+```json
+{
+  "overrides": {
+    "@shopify/shopify-api": "10.0.0",
+    "isbot": "5.1.29"
+  }
+}
 ```
 
-## Usage
+### Remix Configuration
 
-### For Merchants
+Key settings in `remix.config.js`:
 
-1. **Install the app** from the Shopify App Store
-2. **Grant permissions** during installation
-3. **Navigate to the dashboard** to see your store's SEO overview
-4. **Analyze items** by selecting product, collection, page, or blog post types
-5. **Review SEO scores** and recommendations
-6. **Generate AI suggestions** for optimization
-7. **Apply optimizations** with one-click updates
+```javascript
+serverDependenciesToBundle: [
+  /^@shopify\/shopify-app-remix.*/,
+  /^@shopify\/polaris.*/,
+  /^@shopify\/app-bridge.*/,
+  /^@shopify\/app-bridge-react.*/,
+  /^@shopify\/shopify-api.*/,
+  /^isbot.*/,
+]
+```
 
-### For Developers
+## 🚨 Common Issues & Fixes
 
-The app is structured for easy extension:
+### 1. Shopify API Adapter Error
+**Error**: `Missing adapter implementation for 'abstractRuntimeString'`
+**Fix**: Use lazy initialization in `app/lib/shopify.server.ts`
 
-- **Add new SEO factors** in `app/lib/seo-analyzer.server.ts`
-- **Create new routes** in `app/routes/`
-- **Extend database schema** in `prisma/schema.prisma`
-- **Add new Shopify API integrations** in `app/lib/shopify.server.ts`
+### 2. isbot Import Error
+**Error**: `isbot.default is not a function`
+**Fix**: Use named import: `import { isbot } from "isbot"`
 
-## API Endpoints
+### 3. Prisma Client Error
+**Error**: `@prisma/client did not initialize yet`
+**Fix**: Add `prisma generate` to build script
 
-### Authentication
-- `GET /auth` - Initiate OAuth flow
-- `GET /auth/callback` - OAuth callback handler
+### 4. Version Conflicts
+**Error**: Multiple versions of same package
+**Fix**: Use `overrides` and `resolutions` in package.json
 
-### Main App
-- `GET /` - Dashboard with SEO overview
-- `GET /analyze` - Item analysis page
-- `GET /analyze/:id` - Detailed analysis view
-- `GET /billing` - Subscription management
+## 🔄 Maintenance
 
-## Database Schema
+### Regular Updates
 
-### Core Tables
-- `shops` - Store shop information and usage limits
-- `seo_analyses` - SEO analysis results and AI suggestions
-- `usage_logs` - Track usage for billing
+1. **Monthly**: Check for security updates
+   ```bash
+   npm audit
+   npm audit fix
+   ```
 
-## Contributing
+2. **Quarterly**: Update dependencies
+   ```bash
+   npm update
+   npm run typecheck
+   npm run build
+   ```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+3. **Version Conflicts**: Check with
+   ```bash
+   npm ls @shopify/shopify-api
+   npm ls isbot
+   ```
 
-## License
+### Database Migrations
 
-This project is licensed under the MIT License.
+```bash
+# Create migration
+npx prisma migrate dev --name migration_name
 
-## Support
+# Deploy migration
+npx prisma migrate deploy
+```
 
-For support, please contact:
-- Email: support@seoaioptimizer.com
-- Documentation: [docs.seoaioptimizer.com](https://docs.seoaioptimizer.com)
+### Environment Variables
 
-## Changelog
+Keep these updated in both local `.env` and Vercel:
+- `SHOPIFY_API_KEY/SECRET`
+- `DATABASE_URL`
+- `OPENAI_API_KEY`
+- `SESSION_SECRET`
 
-### v1.0.0 (2025-01-XX)
+## 📊 Monitoring
+
+### Vercel Logs
+Monitor deployment and runtime errors in Vercel dashboard.
+
+### Database Health
+Check Supabase dashboard for:
+- Connection status
+- Query performance
+- Storage usage
+
+### Shopify App Health
+Monitor in Shopify Partner dashboard:
+- App installations
+- API usage
+- Webhook delivery
+
+## 🔒 Security
+
+- **HMAC Validation**: All webhooks validated
+- **OAuth Tokens**: Securely stored in database
+- **API Keys**: Environment variables only
+- **CORS**: Configured for Shopify domains
+
+## 📈 Scaling
+
+### Performance
+- Lazy loading for Shopify API
+- Database indexing on frequently queried fields
+- Caching for SEO analysis results
+
+### Cost Optimization
+- OpenAI API usage tracking
+- Database query optimization
+- Vercel function optimization
+
+## 🆘 Support
+
+### Debug Mode
+Enable detailed logging:
+```env
+NODE_ENV=development
+DEBUG=shopify:*
+```
+
+### Common Commands
+```bash
+# Check versions
+npm ls @shopify/shopify-api
+
+# Regenerate Prisma
+npx prisma generate
+
+# Type check
+npm run typecheck
+
+# Lint
+npm run lint
+```
+
+## 📝 Changelog
+
+### v1.0.0
 - Initial release
-- SEO analysis for products, collections, pages, and blog posts
-- AI-powered optimization suggestions
-- Subscription-based usage tracking
-- Shopify OAuth integration
-- Polaris-based responsive UI 
-=======
-# shopifyapp
->>>>>>> 59aa517569c38bd5d960dd4dc593a98d6f40f6bd
+- OAuth authentication
+- SEO analysis engine
+- AI-powered suggestions
+- Usage tracking
+- Vercel deployment
+
+---
+
+**Built with ❤️ for Shopify merchants**
