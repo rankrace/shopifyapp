@@ -134,7 +134,7 @@ export default function Analyze() {
                 image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
               >
                 <p>This app needs to be installed from your Shopify admin to work properly.</p>
-                <Button primary url={`https://${shop || 'your-store'}.myshopify.com/admin/oauth/authorize?client_id=${process.env.SHOPIFY_API_KEY}&scope=${process.env.SHOPIFY_SCOPES}&redirect_uri=${process.env.SHOPIFY_APP_URL}/auth/callback`}>
+                <Button primary url="/auth">
                   Install App
                 </Button>
               </EmptyState>

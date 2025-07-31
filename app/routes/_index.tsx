@@ -92,7 +92,7 @@ export default function Index() {
                 <div style={{ marginTop: "20px" }}>
                   <Button 
                     primary 
-                    url={`https://your-store.myshopify.com/admin/oauth/authorize?client_id=${process.env.SHOPIFY_API_KEY}&scope=${process.env.SHOPIFY_SCOPES}&redirect_uri=${process.env.SHOPIFY_APP_URL}/auth/callback`}
+                    url="/auth"
                   >
                     Install App
                   </Button>
