@@ -47,11 +47,9 @@
     "node": ">=18.0.0"
   },
   "overrides": {
-    "@shopify/shopify-api": "10.0.0",
     "isbot": "5.1.29"
   },
   "resolutions": {
-    "@shopify/shopify-api": "10.0.0",
     "isbot": "5.1.29"
   }
 }
