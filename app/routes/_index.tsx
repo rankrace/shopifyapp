@@ -11,6 +11,7 @@ import {
   Select,
   Text,
   ProgressBar,
+  EmptyState,
 } from "@shopify/polaris";
 import { useState } from "react";
 import { getShopSession, checkUsageLimit } from "~/lib/shopify.server";
@@ -27,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       shop: null,
       usage: { allowed: true, current: 0, limit: 10 },
       seoAnalyses: [],
-      error: "No shop parameter",
+      error: null,
     });
   }
 
@@ -52,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       shop,
       usage: { allowed: true, current: 0, limit: 10 },
       seoAnalyses: [],
-      error: "Failed to load data",
+      error: "Failed to load data. Please reinstall the app.",
     });
   }
 }
@@ -64,6 +65,45 @@ export default function Index() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+
+  // If no shop parameter, show installation page
+  if (!shop) {
+    return (
+      <Page title="SEO AI Optimizer">
+        <Layout>
+          <Layout.Section>
+            <Card>
+              <EmptyState
+                heading="Welcome to SEO AI Optimizer"
+                image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+              >
+                <p>
+                  Boost your Shopify store's search engine rankings with AI-powered SEO analysis and optimization.
+                </p>
+                <div style={{ marginTop: "20px" }}>
+                  <Text variant="headingMd" as="h3">Features:</Text>
+                  <ul style={{ marginTop: "10px", paddingLeft: "20px" }}>
+                    <li>Analyze products, collections, pages, and blog posts</li>
+                    <li>Get AI-powered SEO suggestions</li>
+                    <li>One-click optimization with Shopify Admin API</li>
+                    <li>Usage tracking with tiered pricing plans</li>
+                  </ul>
+                </div>
+                <div style={{ marginTop: "20px" }}>
+                  <Button 
+                    primary 
+                    url={`https://your-store.myshopify.com/admin/oauth/authorize?client_id=${process.env.SHOPIFY_API_KEY}&scope=${process.env.SHOPIFY_SCOPES}&redirect_uri=${process.env.SHOPIFY_APP_URL}/auth/callback`}
+                  >
+                    Install App
+                  </Button>
+                </div>
+              </EmptyState>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </Page>
+    );
+  }
 
   // Filter data based on selected filters
   const filteredData = seoAnalyses.filter((item: any) => {
@@ -130,7 +170,7 @@ export default function Index() {
 
         <Layout.Section>
           <Card>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
               <div>
                 <Text variant="headingMd" as="h3">Overall SEO Score</Text>
                 <Text variant="headingLg" as="p">{averageScore}%</Text>
@@ -150,7 +190,7 @@ export default function Index() {
 
         <Layout.Section>
           <Card>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px' }}>
               <Select
                 label="Status Filter"
                 options={[
